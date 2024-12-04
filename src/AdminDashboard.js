@@ -135,7 +135,7 @@ const AdminDashboard = () => {
 
   const handleOrderDelivered = async (orderId) => {
     try {
-      await fetch('https://server-kashmir.gofastapi.com/markAsDelivered', {
+      await fetch('https://kashmir-client.gofastapi.com/markAsDelivered', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
