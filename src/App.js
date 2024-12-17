@@ -13,7 +13,7 @@ const App = () => {
   // Fetch orders from API
   const fetchOrders = async () => {
     try {
-      const response = await fetch("http://localhost:5000/getOrders");
+      const response = await fetch("https://server3-kashmir.gofastapi.com/getOrders");
       if (!response.ok) throw new Error(`Error: ${response.statusText}`);
       const data = await response.json();
       // Sort orders by createdAt in descending order (newest first)
@@ -36,7 +36,7 @@ const App = () => {
   // Fetch reservations from API
   const fetchReservations = async () => {
     try {
-      const response = await fetch("http://localhost:5000/getReservations");
+      const response = await fetch("https://server3-kashmir.gofastapi.com/getReservations");
       if (!response.ok) throw new Error(`Error: ${response.statusText}`);
       const data = await response.json();
       setReservations(data.reservations);
@@ -56,7 +56,7 @@ const App = () => {
   // Mark an order as delivered
   const handleMarkAsDelivered = async (orderId) => {
     try {
-      const response = await fetch("http://localhost:5000/markAsDelivered", {
+      const response = await fetch("https://server3-kashmir.gofastapi.com/markAsDelivered", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
