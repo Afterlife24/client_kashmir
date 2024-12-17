@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-
 const App = () => {
   const [orders, setOrders] = useState([]);
   const [reservations, setReservations] = useState([]);
@@ -11,51 +10,33 @@ const App = () => {
   const [newOrderCount, setNewOrderCount] = useState(0); // Track new orders
   const [pendingOrderCount, setPendingOrderCount] = useState(0); // Track pending orders
   const [tapAndCollectCount, setTapAndCollectCount] = useState(0); // Track Tap and Collect orders
-  const [lastOrderCount, setLastOrderCount] = useState(0); // Track the previous order count to detect new orders
-  
-  // Notification sound
-  const notificationSound = new Audio("/iphone.mp3"); // Ensure you have a notification sound file at this path
-
   // Fetch orders from API
   const fetchOrders = async () => {
     try {
-      const response = await fetch("https://server3-kashmir.gofastapi.com/getOrders");
+      const response = await fetch("http://localhost:5000/getOrders");
       if (!response.ok) throw new Error(`Error: ${response.statusText}`);
       const data = await response.json();
-
       // Sort orders by createdAt in descending order (newest first)
       const sortedOrders = data.orders.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
       setOrders(sortedOrders);
       setError("");
-
       // Update order counts
       setNewOrderCount(sortedOrders.filter((order) => !order.isDelivered).length);
       setPendingOrderCount(sortedOrders.filter((order) => !order.isDelivered).length);
-
       // Track Tap and Collect orders
       setTapAndCollectCount(sortedOrders.filter((order) => parseInt(order.tableNumber) === 0 && !order.isDelivered).length);
-      
-      // Play notification sound if new orders are received
-      if (sortedOrders.length > lastOrderCount) {
-        notificationSound.play();
-      }
-
-      // Update last order count
-      setLastOrderCount(sortedOrders.length);
-
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-
   // Fetch reservations from API
   const fetchReservations = async () => {
     try {
-      const response = await fetch("https://server3-kashmir.gofastapi.com/getReservations");
+      const response = await fetch("http://localhost:5000/getReservations");
       if (!response.ok) throw new Error(`Error: ${response.statusText}`);
       const data = await response.json();
       setReservations(data.reservations);
@@ -66,25 +47,22 @@ const App = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchOrders();
     fetchReservations();
     const intervalId = setInterval(fetchOrders, 10000);
     return () => clearInterval(intervalId);
-  }, [lastOrderCount]); // Dependency added to re-fetch when new orders come in
-
+  }, []);
   // Mark an order as delivered
   const handleMarkAsDelivered = async (orderId) => {
     try {
-      const response = await fetch("https://server3-kashmir.gofastapi.com/markAsDelivered", {
+      const response = await fetch("http://localhost:5000/markAsDelivered", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ orderId }),
       });
-
       const data = await response.json();
       if (response.ok) {
         // Update the order status locally
@@ -93,7 +71,6 @@ const App = () => {
             order._id === orderId ? { ...order, isDelivered: true } : order
           )
         );
-
         // Update the count
         setPendingOrderCount((prevCount) => prevCount - 1);
         setTapAndCollectCount((prevCount) =>
@@ -108,7 +85,6 @@ const App = () => {
       setError(err.message);
     }
   };
-
   // Determine Table Status
   const getTableStatus = (tableNumber) => {
     const tableOrders = orders.filter(
@@ -116,11 +92,9 @@ const App = () => {
     );
     return tableOrders.some((order) => !order.isDelivered) ? "pending" : "";
   };
-
   // Render Orders Table
   const renderOrders = () => {
     let filteredOrders = [];
-
     if (menuOption === "All Orders" || menuOption === "Undelivered Orders") {
       filteredOrders = orders.filter(
         (order) =>
@@ -130,7 +104,6 @@ const App = () => {
     } else if (menuOption === "Tap and Collect") {
       filteredOrders = orders.filter((order) => parseInt(order.tableNumber) === 0);
     }
-
     return (
       <table className="order-table">
         <thead>
@@ -197,7 +170,6 @@ const App = () => {
       </table>
     );
   };
-
   // Render Reservations Table
   const renderReservations = () => (
     <table className="order-table">
@@ -223,7 +195,6 @@ const App = () => {
       </tbody>
     </table>
   );
-
   return (
     <div className="app-container">
       {/* Sidebar */}
@@ -263,7 +234,6 @@ const App = () => {
           )}
         </ul>
       </div>
-
       {/* Main Content */}
       <div className="main-content">
         {menuOption === "Reservations" ? (
@@ -317,5 +287,4 @@ const App = () => {
     </div>
   );
 };
-
 export default App;
