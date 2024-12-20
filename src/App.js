@@ -450,12 +450,11 @@ const App = () => {
       <table className="order-table">
         <thead>
           <tr>
-            <th>Table Number</th>
+            {menuOption === "Tap and Collect" && <th>Token ID</th>}
             <th>Dishes</th>
             <th>Quantity</th>
             <th>Date</th>
             <th>Time</th>
-            {menuOption === "Tap and Collect" && <th>Token ID</th>}
             <th>Status</th>
             <th>Action</th>
           </tr>
