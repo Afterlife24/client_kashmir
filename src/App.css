@@ -264,3 +264,49 @@ p.error {
 .mark-delivered.green {
   background-color: green;
 }
+
+/* Date Filter Styling */
+.date-filters {
+  margin-top: 20px;
+  padding: 12px 15px;
+  background-color: #34495e;
+  /* Matches sidebar background */
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #ecf0f1;
+  /* Text color to match sidebar */
+}
+
+.date-filters h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #ecf0f1;
+  /* Lighter color for better contrast */
+}
+
+.date-filters select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #1abc9c;
+  /* Border color to match active menu item */
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s;
+}
+
+.date-filters select:focus {
+  border-color: #16a085;
+  /* Focus color to match hover effect */
+  outline: none;
+}
+
+.date-filters select option {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.date-filters select option:hover {
+  background-color: #f0f0f0;
+}
