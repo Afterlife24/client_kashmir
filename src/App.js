@@ -636,7 +636,7 @@ const App = () => {
     </div>
   );
 };
-<<<<<<< HEAD
+
 
 export default App;
 
@@ -650,6 +650,3 @@ export default App;
 
 
 
-=======
-export default App;
->>>>>>> 3ea7cdf7e1baf24f9489fbc96959ce5728ee047e
