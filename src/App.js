@@ -253,7 +253,7 @@ const App = () => {
               <div className="tables-section">
                 <h2>Tables</h2>
                 <div className="table-grid">
-                  {Array.from({ length: 10 }, (_, i) => i + 1).map((table) => (
+                  {Array.from({ length: 21 }, (_, i) => i + 1).map((table) => (
                     <button
                       key={table}
                       className={`table-button ${getTableStatus(table)}`}
