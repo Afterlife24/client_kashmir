@@ -1,43 +1,49 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+
 const App = () => {
   const [orders, setOrders] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedTable, setSelectedTable] = useState(null);
+  const [selectedTable, setSelectedTable] = useState(1); // Default to Table 1
   const [menuOption, setMenuOption] = useState("All Orders");
-  const [newOrderCount, setNewOrderCount] = useState(0); // Track new orders
-  const [pendingOrderCount, setPendingOrderCount] = useState(0); // Track pending orders
+  const [newOrderCount, setNewOrderCount] = useState(1); // Track new orders
+  const [pendingOrderCount, setPendingOrderCount] = useState(1); // Track pending orders
   const [tapAndCollectCount, setTapAndCollectCount] = useState(0); // Track Tap and Collect orders
+
   // Fetch orders from API
-  
   const fetchOrders = async () => {
     try {
       const response = await fetch("https://server3-kashmir.gofastapi.com/getOrders");
       if (!response.ok) throw new Error(`Error: ${response.statusText}`);
       const data = await response.json();
-      // Sort orders by createdAt in descending order (newest first)
       const sortedOrders = data.orders.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
       setOrders(sortedOrders);
       setError("");
-      // Update order counts
       setNewOrderCount(sortedOrders.filter((order) => !order.isDelivered).length);
       setPendingOrderCount(sortedOrders.filter((order) => !order.isDelivered).length);
-      // Track Tap and Collect orders
-      setTapAndCollectCount(sortedOrders.filter((order) => parseInt(order.tableNumber) === 0 && !order.isDelivered).length);
+      setTapAndCollectCount(
+        sortedOrders.filter(
+          (order) =>
+            parseInt(order.tableNumber) === 0 && !order.isDelivered
+        ).length
+      );
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
   // Fetch reservations from API
   const fetchReservations = async () => {
     try {
-      const response = await fetch("https://server3-kashmir.gofastapi.com/getReservations");
+      const response = await fetch(
+        "https://server3-kashmir.gofastapi.com/getReservations"
+      );
       if (!response.ok) throw new Error(`Error: ${response.statusText}`);
       const data = await response.json();
       setReservations(data.reservations);
@@ -48,34 +54,40 @@ const App = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchOrders();
     fetchReservations();
     const intervalId = setInterval(fetchOrders, 10000);
     return () => clearInterval(intervalId);
   }, []);
-  // Mark an order as delivered
+
   const handleMarkAsDelivered = async (orderId) => {
     try {
-      const response = await fetch("https://server3-kashmir.gofastapi.com/markAsDelivered", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ orderId }),
-      });
+      const response = await fetch(
+        "https://server3-kashmir.gofastapi.com/markAsDelivered",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ orderId }),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
-        // Update the order status locally
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
             order._id === orderId ? { ...order, isDelivered: true } : order
           )
         );
-        // Update the count
         setPendingOrderCount((prevCount) => prevCount - 1);
         setTapAndCollectCount((prevCount) =>
-          prevCount > 0 && orders.some((order) => order._id === orderId && parseInt(order.tableNumber) === 0)
+          prevCount > 0 &&
+          orders.some(
+            (order) =>
+              order._id === orderId && parseInt(order.tableNumber) === 0
+          )
             ? prevCount - 1
             : prevCount
         );
@@ -86,35 +98,35 @@ const App = () => {
       setError(err.message);
     }
   };
-  // Determine Table Status
+
   const getTableStatus = (tableNumber) => {
     const tableOrders = orders.filter(
       (order) => parseInt(order.tableNumber) === tableNumber
     );
     return tableOrders.some((order) => !order.isDelivered) ? "pending" : "";
   };
-  // Render Orders Table
+
   const renderOrders = () => {
     let filteredOrders = [];
     if (menuOption === "All Orders" || menuOption === "Undelivered Orders") {
       filteredOrders = orders.filter(
         (order) =>
           (menuOption === "All Orders" || !order.isDelivered) &&
-          (selectedTable ? parseInt(order.tableNumber) === selectedTable : true)
+          parseInt(order.tableNumber) === selectedTable
       );
     } else if (menuOption === "Tap and Collect") {
       filteredOrders = orders.filter((order) => parseInt(order.tableNumber) === 0);
     }
+
     return (
       <table className="order-table">
         <thead>
           <tr>
-            <th>Table Number</th>
+            {menuOption === "Tap and Collect" && <th>Token ID</th>}
             <th>Dishes</th>
             <th>Quantity</th>
             <th>Date</th>
             <th>Time</th>
-            {menuOption === "Tap and Collect" && <th>Token ID</th>}
             <th>Status</th>
             <th>Action</th>
           </tr>
@@ -126,7 +138,6 @@ const App = () => {
               <>
                 {order.dishes.map((dish, idx) => (
                   <tr key={`${order._id}-${idx}`}>
-                    {/* Show Table Number only on the first row */}
                     {idx === 0 && (
                       <td rowSpan={order.dishes.length}>
                         {order.tableNumber || "Tap and Collect"}
@@ -153,10 +164,14 @@ const App = () => {
                         <td rowSpan={order.dishes.length}>
                           {!order.isDelivered && (
                             <button
-                              className={`mark-delivered ${order.isDelivered ? 'delivered' : 'pending'}`}
+                              className={`mark-delivered ${
+                                order.isDelivered ? "delivered" : "pending"
+                              }`}
                               onClick={() => handleMarkAsDelivered(order._id)}
                             >
-                              {order.isDelivered ? "Delivered" : "Mark as Delivered"}
+                              {order.isDelivered
+                                ? "Delivered"
+                                : "Mark as Delivered"}
                             </button>
                           )}
                         </td>
@@ -171,7 +186,7 @@ const App = () => {
       </table>
     );
   };
-  // Render Reservations Table
+
   const renderReservations = () => (
     <table className="order-table">
       <thead>
@@ -196,46 +211,49 @@ const App = () => {
       </tbody>
     </table>
   );
+
   return (
     <div className="app-container">
-      {/* Sidebar */}
       <div className="sidebar">
         <h2>Menu</h2>
         <ul className="menu-list">
-          {["All Orders", "Undelivered Orders", "Tap and Collect", "Reservations"].map(
-            (item) => (
-              <li
-                key={item}
-                className={`menu-item ${menuOption === item ? "active" : ""}`}
-                onClick={() => {
-                  setMenuOption(item);
-                  setSelectedTable(null);
-                }}
-              >
-                <span className="menu-icon">
-                  {item === "All Orders"
-                    ? "📦"
-                    : item === "Undelivered Orders"
-                    ? "⏳"
-                    : item === "Tap and Collect"
-                    ? "🛒"
-                    : "📅"}
-                </span>
-                {item} {item === "All Orders" && newOrderCount > 0 && (
-                  <span className="badge">{newOrderCount}</span>
-                )}
-                {item === "Undelivered Orders" && pendingOrderCount > 0 && (
-                  <span className="badge">{pendingOrderCount}</span>
-                )}
-                {item === "Tap and Collect" && tapAndCollectCount > 0 && (
-                  <span className="badge">{tapAndCollectCount}</span>
-                )}
-              </li>
-            )
-          )}
+          {[
+            "All Orders",
+            "Undelivered Orders",
+            "Tap and Collect",
+            "Reservations",
+          ].map((item) => (
+            <li
+              key={item}
+              className={`menu-item ${menuOption === item ? "active" : ""}`}
+              onClick={() => {
+                setMenuOption(item);
+                setSelectedTable(item === "Tap and Collect" ? null : 1);
+              }}
+            >
+              <span className="menu-icon">
+                {item === "All Orders"
+                  ? "📦"
+                  : item === "Undelivered Orders"
+                  ? "⏳"
+                  : item === "Tap and Collect"
+                  ? "🛒"
+                  : "📅"}
+              </span>
+              {item}{" "}
+              {item === "All Orders" && newOrderCount > 0 && (
+                <span className="badge">{newOrderCount}</span>
+              )}
+              {item === "Undelivered Orders" && pendingOrderCount > 0 && (
+                <span className="badge">{pendingOrderCount}</span>
+              )}
+              {item === "Tap and Collect" && tapAndCollectCount > 0 && (
+                <span className="badge">{tapAndCollectCount}</span>
+              )}
+            </li>
+          ))}
         </ul>
       </div>
-      {/* Main Content */}
       <div className="main-content">
         {menuOption === "Reservations" ? (
           <div className="reservations-section">
@@ -285,23 +303,8 @@ const App = () => {
           </>
         )}
       </div>
-
     </div>
   );
 };
+
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
