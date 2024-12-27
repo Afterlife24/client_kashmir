@@ -310,3 +310,8 @@ p.error {
 .date-filters select option:hover {
   background-color: #f0f0f0;
 }
+
+.Bold-text {
+  font-weight: bold;
+  font-size: 10rem;
+}
