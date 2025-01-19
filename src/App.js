@@ -438,75 +438,85 @@ const App = () => {
   };
 
   const renderOrders = () => {
-    const filteredOrders = filterOrdersByDate().filter(
-      (order) =>
-        (menuOption === "All Orders" || !order.isDelivered) &&
-        (menuOption === "Tap and Collect"
-          ? parseInt(order.tableNumber) === 0
-          : parseInt(order.tableNumber) === selectedTable)
-    );
+  const filteredOrders = filterOrdersByDate().filter(
+    (order) =>
+      (menuOption === "All Orders" || !order.isDelivered) &&
+      (menuOption === "Tap and Collect"
+        ? parseInt(order.tableNumber) === 0
+        : parseInt(order.tableNumber) === selectedTable)
+  );
 
-    return (
-      <table className="order-table">
-        <thead>
-          <tr>
-            {menuOption === "Tap and Collect" && <th>Token ID</th>}
-            <th>Dish</th>
-            <th>Quantity</th>
-            <th>Time</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredOrders.map((order) => {
-            const date = new Date(order.createdAt);
-            return (
-              <>
-                {order.dishes.map((dish, idx) => (
-                  <tr key={`${order._id}-${idx}`}>
-                    {idx === 0 && menuOption === "Tap and Collect" && (
-                      <td rowSpan={order.dishes.length} className="Bold-text">
-                        {order.tokenId || "N/A" }
+  return (
+    <table className="order-table">
+      <thead>
+        <tr>
+          {menuOption === "Tap and Collect" && <th>Email</th>}
+          {menuOption === "Tap and Collect" && <th>Token ID</th>}
+          <th>Dish</th>
+          <th>Quantity</th>
+          <th>Time</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {filteredOrders.map((order) => {
+          const date = new Date(order.createdAt);
+          return (
+            <>
+              {order.dishes.map((dish, idx) => (
+                <tr key={`${order._id}-${idx}`}>
+                  {idx === 0 && menuOption === "Tap and Collect" && (
+                    <>
+                      <td rowSpan={order.dishes.length} className="bold-text">
+                        {order.email || "N/A"}
                       </td>
-                    )}
-                    <td>{dish.name}</td>
-                    <td>{dish.quantity}</td>
-                    {idx === 0 && (
-                      <>
-                        <td rowSpan={order.dishes.length}>
-                          {date.toLocaleTimeString()}
-                        </td>
-                        <td rowSpan={order.dishes.length}>
-                          {date.toLocaleDateString()}
-                        </td>
-                        <td rowSpan={order.dishes.length}>
-                          {order.isDelivered ? "Delivered" : "Pending"}
-                        </td>
-                        <td rowSpan={order.dishes.length}>
-                          {!order.isDelivered && (
-                            <button
-                              className={`mark-delivered ${
-                                order.isDelivered ? "delivered" : "pending"
-                              }`}
-                              onClick={() => handleMarkAsDelivered(order._id)}
-                            >
-                              {order.isDelivered ? "Delivered" : "Mark as Delivered"}
-                            </button>
-                          )}
-                        </td>
-                      </>
-                    )}
-                  </tr>
-                ))}
-              </>
-            );
-          })}
-        </tbody>
-      </table>
-    );
-  };
+                      <td rowSpan={order.dishes.length} className="bold-text">
+                        {order.tokenId || "N/A"}
+                      </td>
+                    </>
+                  )}
+                  <td>{dish.name}</td>
+                  <td>{dish.quantity}</td>
+                  {idx === 0 && (
+                    <>
+                      <td rowSpan={order.dishes.length}>
+                        {date.toLocaleTimeString()}
+                      </td>
+                      <td rowSpan={order.dishes.length}>
+                        {date.toLocaleDateString()}
+                      </td>
+                      <td rowSpan={order.dishes.length}>
+                        {order.isDelivered ? "Delivered" : "Pending"}
+                      </td>
+                      <td rowSpan={order.dishes.length}>
+                        {!order.isDelivered && (
+                          <button
+                            className={`mark-delivered ${
+                              order.isDelivered ? "delivered" : "pending"
+                            }`}
+                            onClick={() => handleMarkAsDelivered(order._id)}
+                          >
+                            {order.isDelivered
+                              ? "Delivered"
+                              : "Mark as Delivered"}
+                          </button>
+                        )}
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};
+
+      
 
   return (
     <div className="app-container">
