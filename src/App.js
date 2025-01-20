@@ -572,36 +572,39 @@ const App = () => {
       <div className="main-content">
         {menuOption === "Reservations" ? (
           <div className="reservations-section">
-            <h2>Reservations</h2>
-            {loading ? (
-              <p className="loading">Loading...</p>
-            ) : error ? (
-              <p className="error">{error}</p>
-            ) : (
-              <table className="order-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>No. of Persons</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reservations.map((reservation, index) => (
-                    <tr key={index}>
-                      <td>{reservation.name}</td>
-                      <td>{reservation.phone}</td>
-                      <td>{reservation.persons}</td>
-                      <td>{reservation.date}</td>
-                      <td>{reservation.time}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+  <h2>Reservations</h2>
+  {loading ? (
+    <p className="loading">Loading...</p>
+  ) : error ? (
+    <p className="error">{error}</p>
+  ) : (
+    <table className="order-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>No. of Persons</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {reservations.map((reservation, index) => (
+          <tr key={index}>
+            <td>{reservation.name}</td>
+            <td>{reservation.email || "N/A"}</td>
+            <td>{reservation.phone}</td>
+            <td>{reservation.persons}</td>
+            <td>{reservation.date}</td>
+            <td>{reservation.time}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</div>
+
         ) : (
           <>
             {menuOption !== "Tap and Collect" && (

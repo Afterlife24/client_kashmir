@@ -74,7 +74,6 @@ p.error {
 /* Notification Badge */
 .menu-item {
   position: relative;
-  /* Make sure the badge is positioned relative to the menu item */
 }
 
 .badge {
@@ -87,7 +86,6 @@ p.error {
   top: 5px;
   right: 10px;
   display: inline-block;
-  /* Ensure the badge is always visible */
 }
 
 /* Main Content */
@@ -153,26 +151,17 @@ p.error {
 
 .order-table {
   width: 100%;
-  /* Make table take up full width */
-  max-width: 800px;
-  /* Limit the table width for emails */
   border-collapse: collapse;
-  margin: 0 auto;
-  /* Center the table */
-  overflow-x: auto;
-  /* Allow horizontal scrolling if needed */
+  margin: 0;
 }
 
 .order-table th,
 .order-table td {
   border: 1px solid #ddd;
   padding: 8px;
-  /* Reduced padding for compactness */
   text-align: center;
   font-size: 0.85rem;
-  /* Smaller font size for emails */
   word-wrap: break-word;
-  /* Prevent content overflow */
 }
 
 .order-table th {
@@ -192,15 +181,14 @@ p.error {
 @media (max-width: 480px) {
   .order-table {
     font-size: 0.8rem;
-    /* Further reduce font size for small screens */
   }
 
   .order-table th,
   .order-table td {
     padding: 6px;
-    /* Adjust padding */
   }
 }
+
 /* Item Quantity Styling */
 .item-quantity {
   font-size: 0.85rem;
@@ -211,12 +199,14 @@ p.error {
 /* Reservations Section */
 .reservations-section {
   width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .reservations-table {
-  margin-top: 15px;
-  border-collapse: collapse;
   width: 100%;
+  border-collapse: collapse;
+  margin: 0;
 }
 
 .reservations-table th,
@@ -291,18 +281,15 @@ p.error {
   margin-top: 20px;
   padding: 12px 15px;
   background-color: #34495e;
-  /* Matches sidebar background */
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   color: #ecf0f1;
-  /* Text color to match sidebar */
 }
 
 .date-filters h3 {
   font-size: 16px;
   margin-bottom: 12px;
   color: #ecf0f1;
-  /* Lighter color for better contrast */
 }
 
 .date-filters select {
@@ -310,7 +297,6 @@ p.error {
   padding: 10px;
   font-size: 14px;
   border: 1px solid #1abc9c;
-  /* Border color to match active menu item */
   border-radius: 4px;
   background-color: #fff;
   color: #333;
@@ -319,7 +305,6 @@ p.error {
 
 .date-filters select:focus {
   border-color: #16a085;
-  /* Focus color to match hover effect */
   outline: none;
 }
 
