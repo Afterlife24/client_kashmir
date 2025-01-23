@@ -90,7 +90,7 @@ const App = () => {
 
   const handleMarkAsDelivered = async (orderId) => {
     try {
-      const response = await fetch(`https://server3-kashmir.gofastapi.com/markAsDelivered`, {
+      const response = await fetch(`https://kashmir-server4.gofastapi.com/markAsDelivered`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
