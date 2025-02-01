@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, ArcElement } from "chart.js";
 import './VisualData.css';
@@ -9,11 +9,7 @@ const VisualData = ({ orders, reservations }) => {
   const [dateFilter, setDateFilter] = useState("Today");
   const [filteredOrders, setFilteredOrders] = useState(orders);
 
-  useEffect(() => {
-    filterOrdersByDate();
-  }, [dateFilter, orders]);
-
-  const filterOrdersByDate = () => {
+  const filterOrdersByDate = useCallback(() => {
     const now = new Date();
     let filtered = orders;
 
@@ -36,13 +32,11 @@ const VisualData = ({ orders, reservations }) => {
     }
 
     setFilteredOrders(filtered);
-  };
+  }, [orders, dateFilter]);
 
-  // Calculate Tap and Collect orders
-  const tapAndCollectOrders = filteredOrders.filter(order => parseInt(order.tableNumber) === 0);
-
-  // Example datasets
-  const allOrders = filteredOrders;
+  useEffect(() => {
+    filterOrdersByDate();
+  }, [filterOrdersByDate]);
 
   const barData = {
     labels: ["All Orders", "Reservations", "Tap and Collect"],
