@@ -38,6 +38,12 @@ const VisualData = ({ orders, reservations }) => {
     filterOrdersByDate();
   }, [filterOrdersByDate]);
 
+  // Calculate Tap and Collect orders
+  const tapAndCollectOrders = filteredOrders.filter(order => parseInt(order.tableNumber) === 0);
+
+  // Example datasets
+  const allOrders = filteredOrders;
+
   const barData = {
     labels: ["All Orders", "Reservations", "Tap and Collect"],
     datasets: [
